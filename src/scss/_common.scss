@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/print';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/utilities/flex';
+
+//@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+@import 'config/functions';
+@import 'config/defaults';
+@import 'config/mixins';
+@import 'config/fonts';
+@import 'config/keyframes';
+
+//@import 'config/fonts';

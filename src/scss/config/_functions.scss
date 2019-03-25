@@ -1,0 +1,136 @@
+//.test { width: screenMin(md); }
+@function screenMin($key) {
+  @if map-has-key($screen, $key) {
+    @return map-get(map-get($screen, $key), 'min');
+  }
+  @warn "Unknown `#{$key}` in $screen.";
+  @return null;
+}
+
+
+//.test { width: screenMax(md); }
+@function screenMax($key) {
+  @if map-has-key($screen, $key) {
+    @return map-get(map-get($screen, $key), 'max');
+  }
+  @warn "Unknown `#{$key}` in $screen.";
+  @return null;
+}
+
+
+//.overlay { z-index: z(overlay); }
+//.element { z-index: (z(default) + 1); }
+@function z($key) {
+  @if map-has-key($z-layers, $key) {
+    @return map-get($z-layers, $key);
+  }
+  @warn "Unknown `#{$key}` in $z-layers.";
+  @return null;
+}
+
+
+//.test { font-size: rem(32); }
+@function rem($pixels, $context: map-get($defaults, 'base-font-size')) {
+  @return #{$pixels/$context}rem;
+}
+
+
+//.test { font-size: em(32); }
+@function em($pixels, $context: map-get($defaults, 'base-font-size')) {
+  @return #{$pixels/$context}em;
+}
+
+
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+  @return $number;
+}
+
+
+@function sqrt($r) {
+  $x0: 1;
+  $x1: $x0;
+
+  @for $i from 1 through 10 {
+    $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+    $x0: $x1;
+  }
+
+  @return $x1;
+}
+
+
+@function pow($number, $exp) {
+  $value: 1;
+  @if $exp > 0 {
+    @for $i from 1 through $exp {
+      $value: $value * $number;
+    }
+  }
+  @else if $exp < 0 {
+    @for $i from 1 through -$exp {
+      $value: $value / $number;
+    }
+  }
+  @return $value;
+}
+
+
+@function fact($number) {
+  $value: 1;
+  @if $number > 0 {
+    @for $i from 1 through $number {
+      $value: $value * $i;
+    }
+  }
+  @return $value;
+}
+
+
+@function pi() {
+  @return 3.14159265359;
+}
+
+
+@function rad($angle) {
+  $unit: unit($angle);
+  $unitless: $angle / ($angle * 0 + 1);
+  // If the angle has 'deg' as unit, convert to radians.
+  @if $unit == deg {
+    $unitless: $unitless / 180 * pi();
+  }
+  @return $unitless;
+}
+
+
+@function sin($angle) {
+  $sin: 0;
+  $angle: rad($angle);
+  // Iterate a bunch of times.
+  @for $i from 0 through 10 {
+    $sin: $sin + pow(-1, $i) * pow($angle, (2 * $i + 1)) / fact(2 * $i + 1);
+  }
+  @return $sin;
+}
+
+
+@function cos($angle) {
+  $cos: 0;
+  $angle: rad($angle);
+  // Iterate a bunch of times.
+  @for $i from 0 through 10 {
+    $cos: $cos + pow(-1, $i) * pow($angle, 2 * $i) / fact(2 * $i);
+  }
+  @return $cos;
+}
+
+
+@function tan($angle) {
+  @return sin($angle) / cos($angle);
+}
+
+
+
+

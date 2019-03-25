@@ -1,0 +1,11 @@
+extends layout/body
+
+block seo
+    +opengraph({
+        'title': 'Вторая страница',
+        'description': 'Описание второй страницы',
+    })
+
+block body
+    .container
+       | Test page

@@ -1,0 +1,34 @@
+$dropdown: (
+  'container': '.dropdown',
+);
+
+#{map-get($dropdown, 'container')} {
+
+  position: relative;
+
+  &Container {
+
+    margin: 150px;
+
+  }
+
+  &Back {
+
+    position: fixed;
+    background-color: rgba(#000, 0.8);
+    padding: 10px;
+    color: #fff;
+
+    #{map-get($dropdown, 'container')} > & {
+
+      position: absolute;
+      opacity: 0.2;
+      pointer-events: none;
+
+      //display: none;
+
+    }
+
+  }
+
+}

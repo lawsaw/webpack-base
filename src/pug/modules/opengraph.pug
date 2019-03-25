@@ -1,0 +1,41 @@
+mixin opengraph(options)
+    -
+        var options = getOptions(options),
+        tags = [
+            {
+                title: 'title',
+                tag: 'og:title',
+                value: 'Default title'
+            },{
+                title: 'description',
+                tag: 'og:description',
+                value: '',
+            },{
+                title: 'image',
+                tag: 'og:image',
+                value: 'https://prestige-dance.club/images/open-graph.jpg',
+            },{
+                title: 'url',
+                tag: 'og:url',
+                value: 'https://domain.com',
+            },{
+                title: 'type',
+                tag: 'og:type',
+                value: 'website',
+            }
+        ];
+    title= options.title
+    meta(
+        name='description',
+        content= options.description
+    )
+    -for(var i=0; i < tags.length; i++) {
+        meta(
+            name= tags[i]['tag']
+            content= options[tags[i]['title']] || tags[i]['value']
+        )
+        meta(
+            property= tags[i]['tag']
+            content= options[tags[i]['title']] || tags[i]['value']
+        )
+    -}

@@ -1,0 +1,37 @@
+html {
+
+  height: 100%;
+  font-size: #{map-get($defaults, 'base-font-size')}px;
+
+}
+
+body {
+
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  font-family: #{map-get(map-get($defaults, 'font-family'), 'regular')};
+  line-height: #{map-get($defaults, 'base-font-size')/10*map-get($defaults, 'base-line-height')};
+
+  background-color: #eee;
+  background-position: 50% 50%;
+  background-attachment: fixed;
+  background-size: cover;
+
+  background-color: green;
+  //background-image: url(#{map-get($defaults, 'path-images') + 'body-main-bg-blur.png'});
+
+}
+
+
+.container {
+
+  min-width: 800px;
+
+}
+
+body {
+
+  overflow-x: visible;
+
+}

@@ -1,0 +1,18 @@
+-
+    function getOptions(options) {
+        var newOptions = {};
+        for(var prop in options) {
+            newOptions[prop] = options[prop] ? options[prop] : '';
+        }
+        return newOptions;
+    };
+
+    function setModifier(options) {
+        options.prefix = options.prefix ? options.prefix : '';
+        options.values = options.values ? options.values : [];
+        var string = '';
+        for(var item = 0; item < options.values.length; item++ ) {
+            string += options.prefix + options.values[item] + ' ';
+        }
+        return string;
+    };

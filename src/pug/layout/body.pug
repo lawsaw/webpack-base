@@ -1,0 +1,50 @@
+include ../config/functions
+include ../config/options
+include ../modules/opengraph
+include ../modules/favicon
+
+doctype html
+html(lang="ru" prefix="og: http://ogp.me/ns#")
+    head
+        block seo
+        +favicon({
+            'image': options.images.path + "favicon.ico"
+        })
+        meta(
+            charset='utf-8'
+        )
+        meta(
+            name='viewport',
+            content='user-scalable=no'
+        )
+        meta(
+            name='viewport',
+            content='width=device-width, initial-scale=1.0, maximum-scale=1.0'
+        )
+        link(
+            rel='stylesheet',
+            href= 'css/style.css' + options.version
+        )
+    body
+        block body
+        script.
+            function downloadJSAtOnload() {
+                var element = document.createElement("script");
+                element.src = "js/defer.min.js";
+                document.body.appendChild(element);
+            }
+            if (window.addEventListener) window.addEventListener("load", downloadJSAtOnload, false);
+            else if (window.attachEvent) window.attachEvent("onload", downloadJSAtOnload);
+            else window.onload = downloadJSAtOnload;
+        script.
+            function init() {
+                var vidDefer = document.getElementsByTagName('iframe');
+                for (var i = 0; i < vidDefer.length; i++) if (vidDefer[i].getAttribute('data-src')) vidDefer[i].setAttribute('src', vidDefer[i].getAttribute('data-src'));
+            }
+        #rootDropdown
+        #tooltip-root
+
+
+
+
+

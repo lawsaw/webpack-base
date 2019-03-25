@@ -1,0 +1,38 @@
+$defaults: (
+        'base-font-size'    : 14,
+        'base-line-height'  : 1,
+        'font-family' : (
+                'hand'    : 'rosamundaOne',
+                'regular' : 'robotoBlackItalic',
+                'light'   : 'robotoLight',
+                'italic'  : 'robotoItalic',
+                'bold'    : 'robotoBold',
+                'default' : 'Times New Roman',
+        ),
+        'path-images'       : '../images/',
+        'path-fonts'        : '../fonts/',
+        'path-svg'          : '../svg/',
+        'font-size': (
+                'xs': 10,
+                'sm': 12,
+                'md': 14,
+                'lg': 16,
+                'xl': 18,
+                'xxl': 20,
+                'xxxl': 22,
+                'xxxxl': 24,
+        ),
+);
+
+$screen: ();
+
+@each $param, $value in $grid-breakpoints {
+        $screen: map-merge($screen, (
+                $param: (
+                        'min': $value,
+                        'max': #{strip-unit($value) - 1}px
+                )
+        ));
+}
+
+

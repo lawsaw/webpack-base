@@ -1,0 +1,16 @@
+$lozad: (
+  'container': '.lozad',
+);
+
+#{map-get($lozad, 'container')} {
+
+  opacity: 0;
+  transition: 2s ease 0s;
+
+  &--loaded {
+
+    opacity: 1;
+
+  }
+
+}
