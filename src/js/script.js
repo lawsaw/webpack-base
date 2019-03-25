@@ -14,9 +14,14 @@ import './modules/svg.js';
 //import symbol from '../svg/facebook.svg';
 
 import { ready, loadImages } from './config/helpers';
-import { Tooltip } from './modules';
+import { Tooltip, ScrollTo } from './modules';
 
 ready(loadImages);
 
 for(let tooltip of document.getElementsByClassName('tooltipFront')) new Tooltip(tooltip);
+
+for(let link of document.getElementsByClassName('link')) new ScrollTo(link);
+
+
+
 

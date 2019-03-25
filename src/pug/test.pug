@@ -8,4 +8,49 @@ block seo
 
 block body
     .container
-       | Test page
+        | Test page
+        - for(var i = 0; i < 5; i++) {
+        | Test level<br />
+        -}
+        a(href= '#link1').link link1
+        a(href= '#link2').link link2
+        a(href= '#link3').link link3
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        - for(var i = 0; i < 100; i++) {
+        | Test level<br />
+        -}
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        #link1 target1
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        - for(var i = 0; i < 100; i++) {
+        | Test level<br />
+        -}
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        #link2 target2
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        - for(var i = 0; i < 100; i++) {
+        | Test level<br />
+        -}
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        #link3 target3
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
+        - for(var i = 0; i < 100; i++) {
+        | Test level<br />
+        -}
+        - for(var i = 0; i < 10; i++) {
+        | <br />
+        -}
