@@ -8,66 +8,18 @@ block seo
 
 block body
     .wrap.lozad(data-background-image= options.images.path + 'body-main-bg-blur.png')
+
         .wrap-header
-            .logo
-            | Header
-            | <br />
-            svg
-                use(xlink:href='#google-play')
-            | <br />
-            img(src= options.svg.path + 'recording.svg')
-            .fuck
+            .container
+                | Header
 
         .wrap-body
             .container
-                div
-                    a(href='#').footerPromo-links-item
-                        //-img.lozad(data-src= options.images.path + 'apple-store.svg')
-                    a(href='#').footerPromo-links-item
-                        //-img.lozad(data-src= options.images.path + 'google-play.svg')
+               | Body
 
-
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                div(style='margin: 25px auto; display: table;')
-                    .tooltipFront.tooltipFront--inline(event='click')
-                        | tooltip with click<br />
-                        | tooltip2<br />
-                        i.fa.fa-eye
-                        | tooltip<br />
-                        | tooltip<br />
-                        .tooltipBack
-                            h2 Some title
-                            p A very big content of tooltip
-                            p A very big content of tooltip
-                            p A very big content of tooltip
-                            p A very big content of tooltip
-                            p A very big content of tooltip
-                            p A very big content of tooltip
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-                p &nbsp;
-            .wrap-footer
-            | Footer
+        .wrap-footer
+            .container
+                | Footer
 
 
 

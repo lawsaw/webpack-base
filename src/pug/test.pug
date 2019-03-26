@@ -8,49 +8,91 @@ block seo
 
 block body
     .container
-        | Test page
-        - for(var i = 0; i < 5; i++) {
-        | Test level<br />
-        -}
-        a(href= '#link1').link link1
-        a(href= '#link2').link link2
-        a(href= '#link3').link link3
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        - for(var i = 0; i < 100; i++) {
-        | Test level<br />
-        -}
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        #link1 target1
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        - for(var i = 0; i < 100; i++) {
-        | Test level<br />
-        -}
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        #link2 target2
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        - for(var i = 0; i < 100; i++) {
-        | Test level<br />
-        -}
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        #link3 target3
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
-        - for(var i = 0; i < 100; i++) {
-        | Test level<br />
-        -}
-        - for(var i = 0; i < 10; i++) {
-        | <br />
-        -}
+        .testContainer
+            .row
+                .col-3 SVG image with tag <svg>
+                .col-9
+                    svg
+                        use(xlink:href='#google-play')
+            .row
+                .col-3 SVG image with tag <img>
+                .col-9
+                    img(src= options.svg.path + 'recording.svg')
+            .row
+                .col-3 SVG image with CSS background-image
+                .col-9
+                    .logo
+            .row
+                .col-3 background image with CSS background-image
+                .col-9
+                    .fuck
+            .row
+                .col-3 Tooltip
+                .col-9
+                    div(style='margin: 25px auto; display: table;')
+                        .tooltipFront.tooltipFront--inline(event='click')
+                            | tooltip with click<br />
+                            | tooltip2<br />
+                            i.fa.fa-eye
+                            | tooltip<br />
+                            | tooltip<br />
+                            .tooltipBack
+                                h2 Some title
+                                p A very big content of tooltip
+                                p A very big content of tooltip
+                                p A very big content of tooltip
+                                p A very big content of tooltip
+                                p A very big content of tooltip
+                                p A very big content of tooltip
+            .row
+                .col-3 ScrollTo
+                .col-9
+                    | Test page
+                    - for(var i = 0; i < 5; i++) {
+                    | Test level<br />
+                    -}
+                    a(href= '#link1').link link1
+                    a(href= '#link2').link link2
+                    a(href= '#link3').link link3
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    - for(var i = 0; i < 100; i++) {
+                    | Test level<br />
+                    -}
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    #link1 target1
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    - for(var i = 0; i < 100; i++) {
+                    | Test level<br />
+                    -}
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    #link2 target2
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    - for(var i = 0; i < 100; i++) {
+                    | Test level<br />
+                    -}
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    #link3 target3
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+                    - for(var i = 0; i < 100; i++) {
+                    | Test level<br />
+                    -}
+                    - for(var i = 0; i < 10; i++) {
+                    | <br />
+                    -}
+            .row
+                .col-3
+                .col-9

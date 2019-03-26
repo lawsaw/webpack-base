@@ -1,0 +1,42 @@
+.pizda {
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-content: center;
+  flex-wrap: nowrap;
+  transform: rotateZ(10deg);
+
+}
+
+.logo {
+
+  width: 100px;
+  height: 100px;
+  background-color: rgba(black, 0.1);
+  background-image: url(map-get($defaults, 'path-svg') + 'google-play.svg');
+  //backgroung-image: url(sprite.svg#location);
+
+}
+
+.fuck {
+
+  width: 100px;
+  height: 100px;
+  background-color: rgba(black, 0.1);
+  background-image: url(map-get($defaults, 'path-images') + 'bread.jpg');
+  background-size: cover;
+
+}
+
+.testContainer {
+
+  > .row {
+
+    padding: 25px 0;
+    border-bottom: 1px solid #999;
+
+  }
+
+}

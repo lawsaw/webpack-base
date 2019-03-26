@@ -12,14 +12,12 @@ body {
   overflow-y: scroll;
   font-family: #{map-get(map-get($defaults, 'font-family'), 'regular')};
   line-height: #{map-get($defaults, 'base-font-size')/10*map-get($defaults, 'base-line-height')};
-
   background-color: #eee;
   background-position: 50% 50%;
   background-attachment: fixed;
   background-size: cover;
-
-  background-color: green;
-  //background-image: url(#{map-get($defaults, 'path-images') + 'body-main-bg-blur.png'});
+  //background-color: green;
+  background-image: url(#{map-get($defaults, 'path-images') + 'body-main-bg-blur.png'});
 
 }
 

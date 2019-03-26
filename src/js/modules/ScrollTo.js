@@ -1,9 +1,12 @@
+import { scrollTo } from '../helpers/etc';
+
 export default class ScrollTo {
 
-    constructor(component) {
+    constructor(component, duration) {
         this.link = component;
         this.event = 'click';
         this.target = this.getTarget();
+        this.duration = duration || 1500;
         this.init();
     }
 
@@ -25,18 +28,21 @@ export default class ScrollTo {
         return window.scrollY + this.target.getBoundingClientRect().top;
     }
 
-    trigger = (e) => {
-        e.preventDefault();
-        let position = this.getTargetPosition();
-
-        this.target.scrollIntoView({
-            behavior: 'smooth'
-        });
-
+    scrollTo = (position, duration) => {
+        scrollTo(position, duration);
+        // this.target.scrollIntoView({
+        //     behavior: 'smooth'
+        // });
         // window.scrollTo({
         //     top: position,
         //     behavior: "smooth"
         // });
+    }
+
+    trigger = (e) => {
+        e.preventDefault();
+        let position = this.getTargetPosition();
+        this.scrollTo(position, this.duration);
     }
 
 }
