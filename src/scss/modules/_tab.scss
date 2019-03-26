@@ -1,0 +1,199 @@
+$tab: (
+  'container': '.tab',
+);
+
+#{map-get($tab, 'container')} {
+
+  &Menu {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    &-item,
+    &-button {
+
+      display: block;
+      background-color: rgba(#ff00ff, 0.1);
+      padding: 5px 10px;
+      margin: 2px;
+
+      &--active {
+
+        background-color: rgba(#ff00ff, 0.5);
+
+      }
+
+    }
+
+  }
+
+  &Content {
+
+    position: relative;
+    //overflow: hidden;
+    border: 1px solid #666;
+
+    &-item {
+
+      position: absolute;
+      opacity: 0;
+      padding: 15px;
+      right: 0;
+      left: 0;
+      top: 0;
+      animation-iteration-count: 1;
+      animation-timing-function: ease;
+      animation-delay: 0s;
+      animation-direction: normal;
+      animation-play-state: running;
+      animation-fill-mode: both;
+
+      &--active {
+
+        opacity: 1;
+
+      }
+
+      &--fromAngleBottomRight { opacity: 1; transform-origin: right center; animation-name: tab-fromAngleBottomRight; }
+      &--fromAngleBottomLeft { opacity: 1; transform-origin: right center; animation-name: tab-fromAngleBottomLeft; }
+      &--fromOut { opacity: 1; transform-origin: center center; animation-name: tab-fromOut; }
+      &--fromIn { opacity: 1; transform-origin: center center; animation-name: tab-fromIn; }
+      &--fromTop { opacity: 1; animation-name: tab-fromTop; }
+      &--fromBottom { opacity: 1; animation-name: tab-fromBottom; }
+      &--fromRight { opacity: 1; animation-name: tab-fromRight; }
+      &--fromLeft { opacity: 1; animation-name: tab-fromLeft; }
+
+      &--toAngleBottomRight { transform-origin: right center; animation-name: tab-toAngleBottomRight; }
+      &--toAngleBottomLeft { transform-origin: right center; animation-name: tab-toAngleBottomLeft; }
+      &--toOut { transform-origin: center center; animation-name: tab-toOut; }
+      &--toIn { transform-origin: center center; animation-name: tab-toIn; }
+      &--toTop { animation-name: tab-toTop; }
+      &--toBottom { animation-name: tab-toBottom; }
+      &--toRight { animation-name: tab-toRight; }
+      &--toLeft { animation-name: tab-toLeft; }
+
+    }
+
+  }
+
+}
+
+
+@keyframes tab-fromAngleBottomRight {
+  from {
+    transform: rotateZ(-45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromAngleBottomLeft {
+  from {
+    transform: rotateZ(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromOut {
+  from {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromTop {
+  from {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromBottom {
+  from {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromRight {
+  from {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-fromLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+  }
+}
+
+
+
+
+
+
+
+@keyframes tab-toAngleBottomRight {
+  to {
+    transform: rotateZ(45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toAngleBottomLeft {
+  to {
+    transform: rotateZ(-45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toOut {
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toIn {
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toTop {
+  to {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toBottom {
+  to {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toRight {
+  to {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes tab-toLeft {
+  to {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+  }
+}
