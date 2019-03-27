@@ -15,43 +15,30 @@ block body
 
         .wrap-body
             .container
-                .tab
-                    .toolbar
-                        .toolbar-item
-                            .tabMenu
-                                a(href= '#link1').tabMenu-item.tabMenu-item--active link1
-                                a(href= '#link2').tabMenu-item link2
-                                a(href= '#link3').tabMenu-item link3
-                                a(href= '#link4').tabMenu-item link4
-                        .toolbar-item
-                            .tabMenu
-                                a(href= '#prev').tabMenu-button prev
-                                a(href= '#next').tabMenu-button next
-                    .tabContent
-                        .tabContent-item(data-tab= 'link1').tabContent-item--active
-                            | content1
-                        .tabContent-item(data-tab= 'link2')
-                            | content2
-                            | content2 <br />
-                            | content2 <br />
-                            | content2 <br />
-                            | content2 <br />
-                            | content2
-                        .tabContent-item(data-tab= 'link3')
-                            | content3<br />
-                            img(src= options.svg.path + 'recording.svg')
-                            | content3<br />
-                            | content3
-                        .tabContent-item(data-tab= 'link4')
-                            | content3<br />
-                            | content3<br />
-                            | content3<br />
-                            | content3<br />
-                            .fuck
-                            | content3<br />
-                            | content3<br />
-                            | content3<br />
-                            | content3
+                | Body
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
+                | Body
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
+                .scrolly My element
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
+                | Body
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
+                | Body
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
+                | Body
+                - for(var i = 0; i < 20; i++) {
+                | <br />
+                -}
         .wrap-footer
             .container
                 | Footer
