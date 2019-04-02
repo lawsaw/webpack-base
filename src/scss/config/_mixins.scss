@@ -12,3 +12,17 @@
     font-style: normal;
   }
 }
+
+@mixin propSizeWidth($width, $originWidth, $originHeight) {
+
+  width: #{$width}px;
+  height: #{($width * $originHeight) / $originWidth}px;
+
+}
+
+@mixin propSizeHeight($height, $originWidth, $originHeight) {
+
+  height: #{$height}px;
+  width: #{($height * $originWidth) / $originHeight}px;
+
+}

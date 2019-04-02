@@ -59,28 +59,33 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: extractCSS.extract(['css-loader', {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: 'inline',
-                        plugins: function () {
-                            return [
-                                require('autoprefixer')({
-                                    browsers: [
-                                        '> 5%',
-                                        'last 100 versions',
-                                        'ie 6-8'
-                                    ],
-                                    add: true,
-                                    supports: true,
-                                    flexbox: true,
-                                    grid: true,
-                                    cascade: true
-                                }),
-                            ]
+                use: extractCSS.extract([
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            //sourceMap: 'inline',
+                            sourceMap: true,
+                            plugins: function () {
+                                return [
+                                    require('autoprefixer')({
+                                        browsers: [
+                                            '> 5%',
+                                            'last 100 versions',
+                                            'ie 6-8'
+                                        ],
+                                        add: true,
+                                        supports: true,
+                                        flexbox: true,
+                                        grid: true,
+                                        cascade: true
+                                    }),
+                                    require('cssnano')({ preset: 'default' })
+                                ]
+                            }
                         }
-                    }
-                }, 'sass-loader' ])
+                    }, 'sass-loader' ]
+                )
             },
             {
                 test: /svg\/.*\.svg$/,
