@@ -3,6 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const extractCSS = new ExtractTextPlugin({
     filename: 'css/style.css',
+    //allChunks: true
 });
 
 const options = {
@@ -14,6 +15,7 @@ const options = {
 const templates = [
     'index',
     'test',
+    'react',
 ];
 
 let generateTemplates = () => {
@@ -26,6 +28,16 @@ let generateTemplates = () => {
     ));
 }
 
+// let generateReactTemplate = () => {
+//     return [
+//             new HtmlWebPackPlugin({
+//             template: `./src/pug/react.html`,
+//             filename: `./react.html`,
+//             inject: false,
+//         })
+//     ]
+// }
+
 module.exports = {
     entry: {
         defer: ['./src/js/defer.js'],
@@ -33,7 +45,10 @@ module.exports = {
             './src/js/script.js',
             './src/scss/style.scss',
         ],
-        fontawesome: ['./src/js/fontawesome.js']
+        fontawesome: ['./src/js/fontawesome.js'],
+        react: [
+            './src/js/react/index.jsx',
+        ]
     },
     output: {
         publicPath: '/',
@@ -43,7 +58,8 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                //test: /\.jsx?$/,
+                test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: "babel-loader"
@@ -54,7 +70,7 @@ module.exports = {
                 use: [
                     "html-loader",
                     //"pug-html-loader",
-                    "pug-html-loader?pretty&exports=false"
+                    "pug-html-loader?pretty&exports=true"
                 ]
             },
             {
@@ -126,10 +142,14 @@ module.exports = {
         ]
     },
     plugins: generateTemplates()
+        //.concat(generateReactTemplate())
         .concat([extractCSS])
         .concat([
         new SpriteLoaderPlugin({
             //plainSprite: true,
         }),
-    ])
+    ]),
+    resolve: {
+        extensions: ['*', '.js', '.jsx']
+    },
 };

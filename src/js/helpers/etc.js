@@ -47,3 +47,7 @@ export function removeClass(element, className) {
 export function hasClass(element, className) {
     return element.classList ? element.classList.contains(className) : element.className.split(' ').indexOf(className) >= 0;
 }
+
+export function importAll(r) {
+    return r.keys().map(r);
+}

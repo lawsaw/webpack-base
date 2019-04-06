@@ -46,7 +46,7 @@ export default class Scroolly {
 
     getPercent = (value, max) => {
         let res = value * 100 / max;
-        return res >= 100 ? 100 : res <= 0 ? 0 : Math.ceil(res);
+        return res >= 100 ? 100 : res <= 0 ? 0 : Math.round(res);
     }
 
 

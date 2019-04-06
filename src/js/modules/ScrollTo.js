@@ -30,13 +30,6 @@ export default class ScrollTo {
 
     scrollTo = (position, duration) => {
         scrollTo(position, duration);
-        // this.target.scrollIntoView({
-        //     behavior: 'smooth'
-        // });
-        // window.scrollTo({
-        //     top: position,
-        //     behavior: "smooth"
-        // });
     }
 
     trigger = (e) => {

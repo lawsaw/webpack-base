@@ -1,0 +1,189 @@
+$dashboard: (
+  'container': '.dashboard',
+  'space': 3,
+  'separator': 10,
+);
+
+@mixin setAbsSpace($value) {
+  top: $value;
+  bottom: $value;
+  left: $value;
+  right: $value;
+}
+
+#{map-get($dashboard, 'container')} {
+
+  position: relative;
+  padding: 15px;
+  height: 800px;
+
+}
+
+#{map-get($dashboard, 'container')}Window {
+
+  position: absolute;
+  @include setAbsSpace(#{map-get($dashboard, 'space')}px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+
+}
+
+#{map-get($dashboard, 'container')}Separator {
+
+  position: absolute;
+  background-color: rgba(#ff00ff, 0.5);
+  cursor: pointer;
+  z-index: 1;
+
+  #{map-get($dashboard, 'container')}Grid--col > #{map-get($dashboard, 'container')}Grid-item > & {
+
+    top: #{map-get($dashboard, 'space')}px;
+    bottom: #{map-get($dashboard, 'space')}px;
+    width: #{map-get($dashboard, 'separator')}px;
+    left: 100%;
+    transform: translate3d(-50%, 0, 0);
+
+  }
+
+  #{map-get($dashboard, 'container')}Grid--row > #{map-get($dashboard, 'container')}Grid-item > & {
+
+    left: #{map-get($dashboard, 'space')}px;
+    right: #{map-get($dashboard, 'space')}px;
+    height: #{map-get($dashboard, 'separator')}px;
+    top: 100%;
+    transform: translate3d(0, -50%, 0);
+
+  }
+
+}
+
+
+#{map-get($dashboard, 'container')}Toolbar {
+
+  position: absolute;
+  @include setAbsSpace(#{map-get($dashboard, 'space')}px);
+  bottom: auto;
+  opacity: 0;
+  transform: translate3d(0, -100%, 0);
+  transition: all 0.3s ease 0s;
+  background-color: lightgreen;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  z-index: 1;
+  //opacity: 1;
+  //transform: none;
+
+  #{map-get($dashboard, 'container')}Grid-item:hover > & {
+
+    opacity: 1;
+    transform: translate3d(0, 10px, 0);;
+
+  }
+
+  &-item {
+
+    cursor: pointer;
+    &:not(:last-child) {
+
+      content: '|';
+      margin: 0 15px;
+
+    }
+
+  }
+
+}
+
+
+#{map-get($dashboard, 'container')}Grid {
+
+  position: absolute;
+  @include setAbsSpace(0px);
+
+  &-item {
+
+    position: absolute;
+    right: auto;
+    background-color: #666;
+
+    #{map-get($dashboard, 'container')}Grid--col > & {
+
+      top: 0;
+      bottom: 0;
+
+      &:first-child { left: 0; }
+      &:last-child { right: 0; }
+
+    }
+
+    #{map-get($dashboard, 'container')}Grid--row > & {
+
+      left: 0;
+      right: 0;
+
+      &:first-child { top: 0; }
+      &:last-child { bottom: 0; }
+
+    }
+
+    //@for $i from 1 through 10 {
+    //
+    //  #{map-get($dashboard, 'container')}Grid--col#{map-get($dashboard, 'container')}Grid[data-count='#{$i}'] > & {
+    //
+    //    $width: 100 / $i;
+    //    $left: 0;
+    //
+    //    width: #{$width * 1%};
+    //
+    //    @for $s from 1 through $i {
+    //
+    //      &:nth-child(#{$s}) {
+    //
+    //        left: #{$left * 1%};
+    //
+    //      }
+    //
+    //      $left: $left + $width;
+    //
+    //    }
+    //
+    //  }
+    //
+    //  #{map-get($dashboard, 'container')}Grid--row#{map-get($dashboard, 'container')}Grid[data-count='#{$i}'] > & {
+    //
+    //    $height: 100 / $i;
+    //    $top: 0;
+    //
+    //    height: #{$height * 1%};
+    //
+    //    @for $s from 1 through $i {
+    //
+    //      &:nth-child(#{$s}) {
+    //
+    //        top: #{$top * 1%};
+    //
+    //      }
+    //
+    //      $top: $top + $height;
+    //
+    //    }
+    //
+    //  }
+    //
+    //}
+
+    //&:only-child {
+    //
+    //  @include setAbsSpace(0px);
+    //  width: auto;
+    //  height: auto;
+    //
+    //}
+
+  }
+
+}
