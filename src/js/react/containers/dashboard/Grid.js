@@ -1,116 +1,209 @@
 import React, { Component } from 'react';
-import cx from 'classnames';
-import { GridItem } from './';
-import { isReactComponent, isElement } from '../../helpers'
-import { cloneDeep } from 'lodash';
+import { GridItem, Separator } from './';
+import cx from "classnames";
+import { cloneDeep, isEqual } from 'lodash';
 
-export default class Grid extends Component {
+export default class extends Component {
 
     constructor(props) {
         super(props);
-        this.gridItems = [];
-        this.clone = 0;
-        this.gridItems = [];
+        this.onMouseDownEvent = null;
+        this.onMouseUpEvent = null;
+        this.onMouseMoveEvent = null;
+        this.itemRef = [];
+        this.limit = 5;
+        this.tempData = [];
+        this.tempUnit = null;
+        this.lock = false;
+        this.timer = false;
+        this.clientDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
         this.state = {
-            size: 50,
+            dataContent: this.getDefaultData(),
+            currentUnit: {}
         }
     }
 
     static defaultProps = {
-
+        type: 'col',
+        content: [1,2,3]
     }
 
-    updateSize = (distance) => {
-        const { type } = this.props;
-        const { size } = this.state;
-        let { width, height } = this.gridItems[0].current.getBoundingClientRect();
-        let newValue = this.pizda(distance, size, type === 'col' ? width : height);
-        console.log(newValue, distance);
-        this.clone = newValue;
-        this.setState(() => ({
-            size: this.clone
+    componentDidMount = () => {
+        //console.log('fsdf')
+    }
+
+    getDefaultData = () => {
+        const { content } = this.props;
+        let defaultData = {};
+        let size = 100 / content.length;
+        content.forEach((item, index) => {
+            defaultData[index] = {
+                size,
+                space: size * index
+            }
+        })
+        return defaultData;
+    }
+
+    setDefaultData = () => {
+        let defaultData = this.getDefaultData();
+        this.state(() => ({
+            dataContent: defaultData
         }))
     }
 
-    setNewValue = () => {
-        console.log('setNewValue');
-        // this.setState(() => ({
-        //     size: this.clone
-        // }))
-    }
-
-    pizda = (distance, size, realSize) => {
-        let res;
-        res = size + distance * size / realSize;
-        if(distance < 0) {
-            res = res <= 5 ? 5 : res;
-        } else if(distance > 0) {
-            res = res >= 95 ? 95 : res;
-        } else {
-            res = size;
-        }
-        return res;
-    }
-
-    getUpdatedValue = () => {
-        console.log('getUpdatedValue');
-    }
-
-    setValueRound = (value, max) => {
-
-    }
-
-    addMeters = (size) => {
+    getStyle = (index) => {
         const { type } = this.props;
-        let style = {};
+        const { dataContent } = this.state;
+        let style = {item: {}, separator: {}};
         switch (type) {
             case 'col':
-                style.width = `${size}%`;
+            default:
+                style.item.width = `${dataContent[index].size}%`;
+                style.item.left = `${dataContent[index].space}%`;
+                style.separator.left = `${dataContent[index].size + dataContent[index].space}%`;
                 break;
             case 'row':
-                style.height = `${size}%`;
-                break;
+                style.item.height = `${dataContent[index].size}%`;
+                style.item.top = `${dataContent[index].space}%`;
+                style.separator.top = `${dataContent[index].size + dataContent[index].space}%`;
+                break
         }
         return style;
     }
 
-    generateSize = () => {
-        const { content } = this.props;
-        const { size } = this.state;
-        return content.length > 1 ? [
-            size,
-            100 - size
-        ] : [
-            100
-        ]
+    onMouseDown = (e, index) => {
+        this.startResizePoint =  e[this.clientDirection];
+        //console.log(index, this.startResizePoint);
+        this.onMouseUpEvent = event => this.onMouseUp(event, index);
+        this.onMouseMoveEvent = event => this.onMouseMove(event, index);
+        document.addEventListener('mouseup', this.onMouseUpEvent, false);
+        document.addEventListener('mousemove', this.onMouseMoveEvent, false);
+
+        // this.timer = setInterval(() => {
+        //     this.lock = !this.lock
+        // }, 750);
+
+        e.preventDefault();
+        return false;
+    }
+
+    onMouseUp = (e, index) => {
+        console.log('onMouseUp');
+        //this.finishResizePoint =  e[this.clientDirection];
+        //console.log(index, this.finishResizePoint);
+        document.removeEventListener('mouseup', this.onMouseUpEvent, false);
+        document.removeEventListener('mousemove', this.onMouseMoveEvent, false);
+        //clearInterval(this.timer);
+        this.dataUpdate();
+        e.preventDefault();
+        return false;
+    }
+
+    onMouseMove = (e, index) => {
+        //if(this.startResizePoint - e.clientX > 20) {
+            this.finishResizePoint =  e[this.clientDirection];
+            this.calculate(index);
+       // }
+
+        //console.log(index, this.finishResizePoint);
+        //if(!this.lock) {
+
+       //}
+    }
+
+
+
+    calculate = (index) => {
+        const { dataContent, currentUnit } = this.state;
+        const { type } = this.props;
+        let cloneDataContent = cloneDeep(dataContent);
+        let { size: sizePrev, space:spacePrev } = cloneDataContent[index];
+        let { size: sizeNext, space:spaceNext } = cloneDataContent[index+1];
+        let { width: widthRealPrev, left:leftRealPrev, height:heightRealPrev, top:topRealPrev } = this.itemRef[index].current.getBoundingClientRect();
+        let { width: widthRealNext, left:leftRealNext, height:heightRealNext, top:topRealNext } = this.itemRef[index+1].current.getBoundingClientRect();
+        let distance = this.finishResizePoint - this.startResizePoint;
+        //console.log(widthRealPrev, leftRealPrev, widthRealNext, leftRealNext);
+        // console.log(widthRealNext, leftRealNext);
+        // console.log(index, sizePrev, spacePrev, sizeNext, spaceNext, distance);
+        let max,
+            unit,
+            delta,
+            value = Math.abs(distance);
+        if(distance < 0) {
+            max = type == 'col' ? widthRealPrev : heightRealPrev;
+            delta = value * sizePrev / max;
+            delta = delta > sizePrev-this.limit ? sizePrev-this.limit : delta;
+            unit = sizePrev - delta;
+            cloneDataContent[index].size = unit;
+            cloneDataContent[index+1].size = sizeNext + delta;
+            cloneDataContent[index+1].space = unit + spacePrev;
+        } else {
+            max = type == 'col' ? widthRealNext : heightRealNext;
+            delta = value * sizeNext / max;
+            delta = delta > sizeNext-this.limit ? sizeNext-this.limit : delta;
+            unit = sizePrev + delta;
+            cloneDataContent[index].size = unit;
+            cloneDataContent[index+1].space = spaceNext + delta;
+            cloneDataContent[index+1].size = sizeNext - delta;
+        }
+
+        if(currentUnit !== unit) {
+            //console.log(unit, delta);
+            this.tempData = cloneDataContent;
+            this.setState(() => ({
+                currentUnit: {
+                    [index]: unit
+                }
+            }))
+            //this.dataUpdate();
+            //this.tempData = cloneDataContent;
+        }
+
+
+
+
+    }
+
+    dataUpdate = () => {
+        if(!isEqual(this.state.dataContent, this.tempData)) {
+            this.setState(() => ({
+                dataContent: this.tempData
+            }))
+        }
     }
 
     render() {
         const { type, content } = this.props;
-        let sizes = this.generateSize();
-        return (
+        const { currentUnit } = this.state;
+        //console.log(currentUnit);
+        return(
             <div
-                className={cx(`dashboardGrid`, content.length > 0 && `dashboardGrid--${type}`)}
-                draggable={false}
+                className={cx(
+                    `dashboardGrid`,
+                    content.length > 1 && `dashboardGrid--${type}`
+                )}
             >
                 {
                     content.map((item, index) => {
-                        let sizeStyle = this.addMeters(sizes[index]);
-                        this.gridItems[index] = React.createRef();
+                        let { item: itemStyle, separator: separatorStyle } = this.getStyle(index);
+                        this.itemRef[index] = React.createRef();
                         return (
-                            <GridItem
-                                key={index}
-                                index={index}
-                                type={type}
-                                sizeStyle={sizeStyle}
-                                isSeparator={sizes[index+1]}
-                                updateSize={this.updateSize}
-                                refElem={this.gridItems[index]}
-                                setNewValue={this.setNewValue}
-                                renderGrid={this.props.renderGrid}
-                            >
-                                {item}
-                            </GridItem>
+                            <React.Fragment
+                                key={index}>
+                                <GridItem
+                                    style={itemStyle}
+                                    children={item}
+                                    refElem={this.itemRef[index]}
+                                />
+                                {
+                                    content[index+1] && <Separator
+                                        style={separatorStyle}
+                                        onMouseDown={e => this.onMouseDown(e, index)}
+                                        currentUnit={currentUnit[index]}
+                                    />
+                                }
+                            </React.Fragment>
                         )
                     })
                 }

@@ -35,26 +35,27 @@ $dashboard: (
 
   position: absolute;
   background-color: rgba(#ff00ff, 0.5);
-  cursor: pointer;
   z-index: 1;
 
-  #{map-get($dashboard, 'container')}Grid--col > #{map-get($dashboard, 'container')}Grid-item > & {
+  #{map-get($dashboard, 'container')}Grid--col > #{map-get($dashboard, 'container')}Grid-item > &,
+  #{map-get($dashboard, 'container')}Grid--col > & {
 
     top: #{map-get($dashboard, 'space')}px;
     bottom: #{map-get($dashboard, 'space')}px;
     width: #{map-get($dashboard, 'separator')}px;
-    left: 100%;
     transform: translate3d(-50%, 0, 0);
+    cursor: col-resize;
 
   }
 
-  #{map-get($dashboard, 'container')}Grid--row > #{map-get($dashboard, 'container')}Grid-item > & {
+  #{map-get($dashboard, 'container')}Grid--row > #{map-get($dashboard, 'container')}Grid-item > &,
+  #{map-get($dashboard, 'container')}Grid--row > & {
 
     left: #{map-get($dashboard, 'space')}px;
     right: #{map-get($dashboard, 'space')}px;
     height: #{map-get($dashboard, 'separator')}px;
-    top: 100%;
     transform: translate3d(0, -50%, 0);
+    cursor: row-resize;
 
   }
 
@@ -115,8 +116,8 @@ $dashboard: (
       top: 0;
       bottom: 0;
 
-      &:first-child { left: 0; }
-      &:last-child { right: 0; }
+      //&:first-child { left: 0; }
+      //&:last-child { right: 0; }
 
     }
 
@@ -125,8 +126,8 @@ $dashboard: (
       left: 0;
       right: 0;
 
-      &:first-child { top: 0; }
-      &:last-child { bottom: 0; }
+      //&:first-child { top: 0; }
+      //&:last-child { bottom: 0; }
 
     }
 
