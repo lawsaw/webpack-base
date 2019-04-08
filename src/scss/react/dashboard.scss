@@ -110,6 +110,7 @@ $dashboard: (
     position: absolute;
     right: auto;
     background-color: #666;
+    transition: all 0.5s ease 0s;
 
     #{map-get($dashboard, 'container')}Grid--col > & {
 

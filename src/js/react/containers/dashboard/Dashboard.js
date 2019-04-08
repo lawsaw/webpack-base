@@ -15,9 +15,9 @@ export default class extends Component {
         return(
             <div className="dashboard">
                 <Grid
-                    type={'col'}
+                    type={'row'}
                     content={[
-                        10050, 22, 6612
+                        10050, 22, 6612, 6412
                     ]}
                 />
             </div>

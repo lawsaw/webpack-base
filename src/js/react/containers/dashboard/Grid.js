@@ -19,7 +19,7 @@ export default class extends Component {
         this.clientDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
         this.state = {
             dataContent: this.getDefaultData(),
-            currentUnit: {}
+            currentDelta: {}
         }
     }
 
@@ -54,19 +54,20 @@ export default class extends Component {
 
     getStyle = (index) => {
         const { type } = this.props;
-        const { dataContent } = this.state;
+        const { dataContent, currentDelta } = this.state;
         let style = {item: {}, separator: {}};
+        let { index:activeIndex, delta:activeDelta } = currentDelta;
         switch (type) {
             case 'col':
             default:
                 style.item.width = `${dataContent[index].size}%`;
                 style.item.left = `${dataContent[index].space}%`;
-                style.separator.left = `${dataContent[index].size + dataContent[index].space}%`;
+                style.separator.left = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
                 break;
             case 'row':
                 style.item.height = `${dataContent[index].size}%`;
                 style.item.top = `${dataContent[index].space}%`;
-                style.separator.top = `${dataContent[index].size + dataContent[index].space}%`;
+                style.separator.top = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
                 break
         }
         return style;
@@ -115,7 +116,7 @@ export default class extends Component {
 
 
     calculate = (index) => {
-        const { dataContent, currentUnit } = this.state;
+        const { dataContent, currentDelta } = this.state;
         const { type } = this.props;
         let cloneDataContent = cloneDeep(dataContent);
         let { size: sizePrev, space:spacePrev } = cloneDataContent[index];
@@ -129,7 +130,8 @@ export default class extends Component {
         let max,
             unit,
             delta,
-            value = Math.abs(distance);
+            value = Math.abs(distance),
+            realDelta = 0;
         if(distance < 0) {
             max = type == 'col' ? widthRealPrev : heightRealPrev;
             delta = value * sizePrev / max;
@@ -138,6 +140,7 @@ export default class extends Component {
             cloneDataContent[index].size = unit;
             cloneDataContent[index+1].size = sizeNext + delta;
             cloneDataContent[index+1].space = unit + spacePrev;
+            realDelta = -delta;
         } else {
             max = type == 'col' ? widthRealNext : heightRealNext;
             delta = value * sizeNext / max;
@@ -146,16 +149,20 @@ export default class extends Component {
             cloneDataContent[index].size = unit;
             cloneDataContent[index+1].space = spaceNext + delta;
             cloneDataContent[index+1].size = sizeNext - delta;
+            realDelta = delta;
         }
 
-        if(currentUnit !== unit) {
-            //console.log(unit, delta);
+        if(currentDelta.delta !== realDelta) {
+            console.log(unit, realDelta);
             this.tempData = cloneDataContent;
             this.setState(() => ({
-                currentUnit: {
-                    [index]: unit
+                currentDelta: {
+                    index,
+                    delta: realDelta,
                 }
             }))
+            //console.log(this.state.currentDelta);
+
             //this.dataUpdate();
             //this.tempData = cloneDataContent;
         }
@@ -168,15 +175,16 @@ export default class extends Component {
     dataUpdate = () => {
         if(!isEqual(this.state.dataContent, this.tempData)) {
             this.setState(() => ({
-                dataContent: this.tempData
+                dataContent: this.tempData,
+                currentDelta: {}
             }))
         }
     }
 
     render() {
         const { type, content } = this.props;
-        const { currentUnit } = this.state;
-        //console.log(currentUnit);
+        const { currentDelta } = this.state;
+        //console.log(currentDelta);
         return(
             <div
                 className={cx(
@@ -188,6 +196,7 @@ export default class extends Component {
                     content.map((item, index) => {
                         let { item: itemStyle, separator: separatorStyle } = this.getStyle(index);
                         this.itemRef[index] = React.createRef();
+                        let { index:activeIndex, delta:activeDelta } = currentDelta;
                         return (
                             <React.Fragment
                                 key={index}>
@@ -200,7 +209,7 @@ export default class extends Component {
                                     content[index+1] && <Separator
                                         style={separatorStyle}
                                         onMouseDown={e => this.onMouseDown(e, index)}
-                                        currentUnit={currentUnit[index]}
+                                        currentDelta={activeIndex === index && currentDelta}
                                     />
                                 }
                             </React.Fragment>

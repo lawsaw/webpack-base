@@ -10,6 +10,11 @@ export default class extends Component {
 
     }
 
+    onMouseDown = (e) => {
+
+        this.props.onMouseDown(e);
+    }
+
     getSpaceProp = () => {
         const { style } = this.props;
         return Object.keys(style).find(item => item === 'left' || item === 'top');
@@ -17,14 +22,15 @@ export default class extends Component {
 
     render() {
         const { style, currentUnit } = this.props;
-        let spaceProp = this.getSpaceProp();
-        let superstyle = currentUnit ? {[spaceProp]: `${currentUnit}%`} : style;
-        console.log(superstyle);
+        //let spaceProp = this.getSpaceProp();
+        //let superstyle = currentUnit ? {[spaceProp]: `${currentUnit}%`} : style;
+        //console.log(currentUnit);
+
         return(
             <div
                 className="dashboardSeparator"
-                style={superstyle}
-                onMouseDown={this.props.onMouseDown}
+                style={style}
+                onMouseDown={this.onMouseDown}
             />
         )
     }
