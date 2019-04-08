@@ -1,61 +1,76 @@
 import React, { Component } from 'react';
+import { Grid, GridItem, Separator, Toolbar } from './';
 import cx from "classnames";
 import { cloneDeep, isEqual } from 'lodash';
-import { GridItem, Separator } from "../dashboard4";
 
 export default class extends Component {
 
     constructor(props) {
         super(props);
-        this.dataContent = this.getCleanData();
-        this.itemRef = [];
-        this.clientDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
         this.onMouseDownEvent = null;
         this.onMouseUpEvent = null;
         this.onMouseMoveEvent = null;
+        this.itemRef = [];
+        this.limit = 5;
+        this.tempData = [];
+        this.tempUnit = null;
+        this.lock = false;
+        this.timer = false;
+        this.clientDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
         this.state = {
-            dataSize: this.getDefaultSize()
+            dataContent: this.getDefaultData(),
+            currentDelta: {}
         }
     }
 
-    componentDidMount() {}
-
-    getCleanData = () => {
-        const { blocks } = this.props;
-        let data = {};
-        for(let i = 0; i < blocks; i++) {
-            data[i] = null
-        }
-        return data;
+    static defaultProps = {
+        type: 'col',
+        content: ['']
     }
 
-    getDefaultSize = () => {
-        let dataArr = Object.keys(this.dataContent);
-        let defaultSize = {};
-        let size = 100 / dataArr.length;
-        dataArr.forEach((item, index) => {
-            defaultSize[index] = {
+    componentDidMount = () => {
+        //console.log('fsdf')
+    }
+
+    componentDidUpdate = (pr) => {
+
+    }
+
+    getDefaultData = () => {
+        const { content } = this.props;
+        let defaultData = {};
+        let size = 100 / content.length;
+        content.forEach((item, index) => {
+            defaultData[index] = {
                 size,
                 space: size * index
             }
         })
-        return defaultSize;
+        return defaultData;
+    }
+
+    setDefaultData = () => {
+        let defaultData = this.getDefaultData();
+        this.state(() => ({
+            dataContent: defaultData
+        }))
     }
 
     getStyle = (index) => {
         const { type } = this.props;
-        const { dataSize } = this.state;
+        const { dataContent, currentDelta } = this.state;
         let style = {item: {}, separator: {}};
+        let { index:activeIndex, delta:activeDelta } = currentDelta;
         switch (type) {
             case 'col':
-                style.item.width = `${dataSize[index].size}%`;
-                style.item.left = `${dataSize[index].space}%`;
-                style.separator.left = `${dataSize[index].size + dataSize[index].space}%`;
+                style.item.width = `${dataContent[index].size}%`;
+                style.item.left = `${dataContent[index].space}%`;
+                style.separator.left = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
                 break;
             case 'row':
-                style.item.height = `${dataSize[index].size}%`;
-                style.item.top = `${dataSize[index].space}%`;
-                style.separator.top = `${dataSize[index].size + dataSize[index].space}%`;
+                style.item.height = `${dataContent[index].size}%`;
+                style.item.top = `${dataContent[index].space}%`;
+                style.separator.top = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
                 break;
             default:
                 style.item.left = `0%`;
@@ -74,27 +89,45 @@ export default class extends Component {
         this.onMouseMoveEvent = event => this.onMouseMove(event, index);
         document.addEventListener('mouseup', this.onMouseUpEvent, false);
         document.addEventListener('mousemove', this.onMouseMoveEvent, false);
+
+        // this.timer = setInterval(() => {
+        //     this.lock = !this.lock
+        // }, 750);
+
         e.preventDefault();
         return false;
     }
 
     onMouseUp = (e, index) => {
         console.log('onMouseUp');
+        //this.finishResizePoint =  e[this.clientDirection];
+        //console.log(index, this.finishResizePoint);
         document.removeEventListener('mouseup', this.onMouseUpEvent, false);
         document.removeEventListener('mousemove', this.onMouseMoveEvent, false);
+        //clearInterval(this.timer);
+        this.dataUpdate();
         e.preventDefault();
         return false;
     }
 
     onMouseMove = (e, index) => {
-        this.finishResizePoint =  e[this.clientDirection];
-        this.calculate(index);
+        //if(this.startResizePoint - e.clientX > 20) {
+            this.finishResizePoint =  e[this.clientDirection];
+            this.calculate(index);
+       // }
+
+        //console.log(index, this.finishResizePoint);
+        //if(!this.lock) {
+
+       //}
     }
 
+
+
     calculate = (index) => {
-        const { dataSize } = this.state;
+        const { dataContent, currentDelta } = this.state;
         const { type } = this.props;
-        let cloneDataContent = cloneDeep(dataSize);
+        let cloneDataContent = cloneDeep(dataContent);
         let { size: sizePrev, space:spacePrev } = cloneDataContent[index];
         let { size: sizeNext, space:spaceNext } = cloneDataContent[index+1];
         let { width: widthRealPrev, left:leftRealPrev, height:heightRealPrev, top:topRealPrev } = this.itemRef[index].current.getBoundingClientRect();
@@ -128,49 +161,90 @@ export default class extends Component {
             realDelta = delta;
         }
 
-        console.log(unit);
+        if(currentDelta.delta !== realDelta) {
+            console.log(unit, realDelta);
+            this.tempData = cloneDataContent;
+            this.setState(() => ({
+                currentDelta: {
+                    index,
+                    delta: realDelta,
+                }
+            }))
+            //console.log(this.state.currentDelta);
 
-        // if(currentDelta.delta !== realDelta) {
-        //     console.log(unit, realDelta);
-        //     this.tempData = cloneDataContent;
-        //     this.setState(() => ({
-        //         currentDelta: {
-        //             index,
-        //             delta: realDelta,
-        //         }
-        //     }))
-        // }
+            //this.dataUpdate();
+            //this.tempData = cloneDataContent;
+        }
+
+
+
+
+    }
+
+    dataUpdate = () => {
+        if(!isEqual(this.state.dataContent, this.tempData)) {
+            this.setState(() => ({
+                dataContent: this.tempData,
+                currentDelta: {}
+            }))
+        }
+    }
+
+    createGrid = (index, type) => {
+        console.log(index, type);
+        const { content } = this.props;
+        return <Grid
+            type={type}
+            content={[
+                content[0],
+                2
+            ]}
+        />
+    }
+
+    destroyGrid = (index) => {
+        const { dataContent } = this.state;
+        let clone = cloneDeep(dataContent);
+        delete clone[index];
+        this.setState(() => ({
+            dataContent: clone
+        }))
+        console.log(index);
+        console.log(clone);
     }
 
     render() {
-        const { type } = this.props;
-        let dataArr = Object.keys(this.dataContent);
-        return (
+        const { type, content } = this.props;
+        const { currentDelta } = this.state;
+        //console.log(currentDelta);
+        return(
             <div
                 className={cx(
                     `dashboardGrid`,
-                    `dashboardGrid--${type}`
+                    content.length > 1 && `dashboardGrid--${type}`
                 )}
             >
                 {
-                    dataArr.map((item, index) => {
+                    content.map((item, index) => {
                         let { item: itemStyle, separator: separatorStyle } = this.getStyle(index);
                         this.itemRef[index] = React.createRef();
+                        let { index:activeIndex, delta:activeDelta } = currentDelta;
                         return (
                             <React.Fragment
                                 key={index}>
                                 <GridItem
                                     index={index}
                                     style={itemStyle}
-                                    children={this.dataContent[item]}
+                                    children={item}
                                     refElem={this.itemRef[index]}
                                     createGrid={this.createGrid}
                                     destroyGrid={this.destroyGrid}
                                 />
                                 {
-                                    dataArr[index+1] && <Separator
+                                    content[index+1] && <Separator
                                         style={separatorStyle}
                                         onMouseDown={e => this.onMouseDown(e, index)}
+                                        currentDelta={activeIndex === index && currentDelta}
                                     />
                                 }
                             </React.Fragment>
