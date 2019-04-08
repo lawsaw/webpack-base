@@ -11,14 +11,17 @@ export default class extends Component {
 
     }
 
+    renderGrid = () => {
+        return <Grid
+            content={[1,2,3,4]}
+        />
+    }
+
     render() {
         return(
             <div className="dashboard">
                 <Grid
-                    type={'row'}
-                    content={[
-                        10050, 22, 6612, 6412
-                    ]}
+                    content={[1,2,3,4]}
                 />
             </div>
         )

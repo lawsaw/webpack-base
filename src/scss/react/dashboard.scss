@@ -75,13 +75,14 @@ $dashboard: (
   flex-direction: row;
   justify-content: flex-end;
   z-index: 1;
-  //opacity: 1;
-  //transform: none;
+  opacity: 1;
+  transform: none;
+  transform: translate3d(0, 10px, 0);;
 
   #{map-get($dashboard, 'container')}Grid-item:hover > & {
 
     opacity: 1;
-    transform: translate3d(0, 10px, 0);;
+    transform: translate3d(0, 10px, 0);
 
   }
 

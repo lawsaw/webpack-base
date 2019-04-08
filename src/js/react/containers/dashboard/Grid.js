@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GridItem, Separator } from './';
+import { Grid, GridItem, Separator, Toolbar } from './';
 import cx from "classnames";
 import { cloneDeep, isEqual } from 'lodash';
 
@@ -25,11 +25,15 @@ export default class extends Component {
 
     static defaultProps = {
         type: 'col',
-        content: [1,2,3]
+        content: ['']
     }
 
     componentDidMount = () => {
         //console.log('fsdf')
+    }
+
+    componentDidUpdate = (pr) => {
+
     }
 
     getDefaultData = () => {
@@ -59,7 +63,6 @@ export default class extends Component {
         let { index:activeIndex, delta:activeDelta } = currentDelta;
         switch (type) {
             case 'col':
-            default:
                 style.item.width = `${dataContent[index].size}%`;
                 style.item.left = `${dataContent[index].space}%`;
                 style.separator.left = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
@@ -68,7 +71,13 @@ export default class extends Component {
                 style.item.height = `${dataContent[index].size}%`;
                 style.item.top = `${dataContent[index].space}%`;
                 style.separator.top = `${dataContent[index].size + dataContent[index].space + (activeIndex === index ? activeDelta : 0)}%`;
-                break
+                break;
+            default:
+                style.item.left = `0%`;
+                style.item.top = `0%`;
+                style.item.width = `100%`;
+                style.item.height = `100%`;
+                break;
         }
         return style;
     }
@@ -181,6 +190,29 @@ export default class extends Component {
         }
     }
 
+    createGrid = (index, type) => {
+        console.log(index, type);
+        const { content } = this.props;
+        return <Grid
+            type={type}
+            content={[
+                content[0],
+                2
+            ]}
+        />
+    }
+
+    destroyGrid = (index) => {
+        const { dataContent } = this.state;
+        let clone = cloneDeep(dataContent);
+        delete clone[index];
+        this.setState(() => ({
+            dataContent: clone
+        }))
+        console.log(index);
+        console.log(clone);
+    }
+
     render() {
         const { type, content } = this.props;
         const { currentDelta } = this.state;
@@ -201,9 +233,12 @@ export default class extends Component {
                             <React.Fragment
                                 key={index}>
                                 <GridItem
+                                    index={index}
                                     style={itemStyle}
                                     children={item}
                                     refElem={this.itemRef[index]}
+                                    createGrid={this.createGrid}
+                                    destroyGrid={this.destroyGrid}
                                 />
                                 {
                                     content[index+1] && <Separator
