@@ -1,74 +1,42 @@
 import React, { Component } from 'react';
 import cx from "classnames";
 import { cloneDeep, isEqual } from 'lodash';
-import { GridItem, Separator } from "../dashboard4";
+import { GridItem, Separator } from "./";
 
 export default class extends Component {
 
     constructor(props) {
         super(props);
-        this.dataContent = this.getCleanData();
+        this.dataContent = this.updateData();
         this.itemRef = [];
-        this.clientDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
-        this.onMouseDownEvent = null;
-        this.onMouseUpEvent = null;
-        this.onMouseMoveEvent = null;
+        this.resizeLimits = {start: 0, finish: 0};
+        this.limit = {
+            absolute: 0,
+            relative: 30,
+        };
+        this.tempData = {};
+        this.onMouseDownEvent = () => {};
+        this.onMouseUpEvent = () => {};
+        this.onMouseMoveEvent = () => {};
+        this.mouseDirection = this.props.type === 'col' ? 'clientX' : 'clientY';
         this.state = {
-            dataSize: this.getDefaultSize()
+            blocks: this.props.blocks,
+            dataSize: this.props.getDefaultSize(this.dataContent),
+            currentDelta: {index: 0, delta: 0}
         }
     }
 
-    componentDidMount() {}
-
-    getCleanData = () => {
+    updateData = () => {
         const { blocks } = this.props;
-        let data = {};
+        let dataContent = {};
         for(let i = 0; i < blocks; i++) {
-            data[i] = null
+            dataContent[i] = this.dataContent ? this.dataContent[i] ? this.dataContent[i] : null : null;
         }
-        return data;
-    }
-
-    getDefaultSize = () => {
-        let dataArr = Object.keys(this.dataContent);
-        let defaultSize = {};
-        let size = 100 / dataArr.length;
-        dataArr.forEach((item, index) => {
-            defaultSize[index] = {
-                size,
-                space: size * index
-            }
-        })
-        return defaultSize;
-    }
-
-    getStyle = (index) => {
-        const { type } = this.props;
-        const { dataSize } = this.state;
-        let style = {item: {}, separator: {}};
-        switch (type) {
-            case 'col':
-                style.item.width = `${dataSize[index].size}%`;
-                style.item.left = `${dataSize[index].space}%`;
-                style.separator.left = `${dataSize[index].size + dataSize[index].space}%`;
-                break;
-            case 'row':
-                style.item.height = `${dataSize[index].size}%`;
-                style.item.top = `${dataSize[index].space}%`;
-                style.separator.top = `${dataSize[index].size + dataSize[index].space}%`;
-                break;
-            default:
-                style.item.left = `0%`;
-                style.item.top = `0%`;
-                style.item.width = `100%`;
-                style.item.height = `100%`;
-                break;
-        }
-        return style;
+        return dataContent;
     }
 
     onMouseDown = (e, index) => {
-        this.startResizePoint =  e[this.clientDirection];
+        this.resizeLimits.start =  e[this.mouseDirection];
         //console.log(index, this.startResizePoint);
         this.onMouseUpEvent = event => this.onMouseUp(event, index);
         this.onMouseMoveEvent = event => this.onMouseMove(event, index);
@@ -82,69 +50,58 @@ export default class extends Component {
         console.log('onMouseUp');
         document.removeEventListener('mouseup', this.onMouseUpEvent, false);
         document.removeEventListener('mousemove', this.onMouseMoveEvent, false);
+        this.dataResize();
         e.preventDefault();
         return false;
     }
 
     onMouseMove = (e, index) => {
-        this.finishResizePoint =  e[this.clientDirection];
-        this.calculate(index);
+        this.resizeLimits.finish =  e[this.mouseDirection];
+        //this.calculate(index);
+        const { type } = this.props;
+        const { dataSize, currentDelta } = this.state;
+        let tempData = this.props.calculate(
+            index,
+            type,
+            dataSize,
+            this.resizeLimits,
+            this.limit,
+            this.itemRef[index],
+            this.itemRef[index+1]
+        );
+        if(this.tempData.value !== tempData.value) {
+            this.tempData = tempData;
+            console.log(this.tempData);
+            this.setState(() => ({
+                currentDelta: {
+                    index,
+                    delta: tempData.delta,
+                }
+            }))
+        }
     }
 
-    calculate = (index) => {
-        const { dataSize } = this.state;
-        const { type } = this.props;
-        let cloneDataContent = cloneDeep(dataSize);
-        let { size: sizePrev, space:spacePrev } = cloneDataContent[index];
-        let { size: sizeNext, space:spaceNext } = cloneDataContent[index+1];
-        let { width: widthRealPrev, left:leftRealPrev, height:heightRealPrev, top:topRealPrev } = this.itemRef[index].current.getBoundingClientRect();
-        let { width: widthRealNext, left:leftRealNext, height:heightRealNext, top:topRealNext } = this.itemRef[index+1].current.getBoundingClientRect();
-        let distance = this.finishResizePoint - this.startResizePoint;
-        //console.log(widthRealPrev, leftRealPrev, widthRealNext, leftRealNext);
-        // console.log(widthRealNext, leftRealNext);
-        // console.log(index, sizePrev, spacePrev, sizeNext, spaceNext, distance);
-        let max,
-            unit,
-            delta,
-            value = Math.abs(distance),
-            realDelta = 0;
-        if(distance < 0) {
-            max = type == 'col' ? widthRealPrev : heightRealPrev;
-            delta = value * sizePrev / max;
-            delta = delta > sizePrev-this.limit ? sizePrev-this.limit : delta;
-            unit = sizePrev - delta;
-            cloneDataContent[index].size = unit;
-            cloneDataContent[index+1].size = sizeNext + delta;
-            cloneDataContent[index+1].space = unit + spacePrev;
-            realDelta = -delta;
-        } else {
-            max = type == 'col' ? widthRealNext : heightRealNext;
-            delta = value * sizeNext / max;
-            delta = delta > sizeNext-this.limit ? sizeNext-this.limit : delta;
-            unit = sizePrev + delta;
-            cloneDataContent[index].size = unit;
-            cloneDataContent[index+1].space = spaceNext + delta;
-            cloneDataContent[index+1].size = sizeNext - delta;
-            realDelta = delta;
+    dataResize = () => {
+        if(!isEqual(this.state.dataSize, this.tempData.dataSize)) {
+            this.setState(() => ({
+                dataSize: this.tempData.dataSize,
+                currentDelta: {}
+            }))
         }
+    }
 
-        console.log(unit);
+    createGrid = (index, type) => {
+        console.log(index, type);
+    }
 
-        // if(currentDelta.delta !== realDelta) {
-        //     console.log(unit, realDelta);
-        //     this.tempData = cloneDataContent;
-        //     this.setState(() => ({
-        //         currentDelta: {
-        //             index,
-        //             delta: realDelta,
-        //         }
-        //     }))
-        // }
+    destroyGrid = (index) => {
+        console.log(index);
     }
 
     render() {
         const { type } = this.props;
-        let dataArr = Object.keys(this.dataContent);
+        const { dataSize, currentDelta } = this.state;
+        let dataContentArray = Object.keys(this.dataContent);
         return (
             <div
                 className={cx(
@@ -153,8 +110,8 @@ export default class extends Component {
                 )}
             >
                 {
-                    dataArr.map((item, index) => {
-                        let { item: itemStyle, separator: separatorStyle } = this.getStyle(index);
+                    dataContentArray.map((item, index) => {
+                        let { item: itemStyle, separator: separatorStyle } = this.props.getStyle(index, type, dataSize, currentDelta);
                         this.itemRef[index] = React.createRef();
                         return (
                             <React.Fragment
@@ -168,7 +125,7 @@ export default class extends Component {
                                     destroyGrid={this.destroyGrid}
                                 />
                                 {
-                                    dataArr[index+1] && <Separator
+                                    dataContentArray[index+1] && <Separator
                                         style={separatorStyle}
                                         onMouseDown={e => this.onMouseDown(e, index)}
                                     />

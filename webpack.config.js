@@ -55,6 +55,7 @@ module.exports = {
         path: __dirname + '/dist',
         filename: "js/[name].min.js",
     },
+    devtool: 'inline-source-map',
     module: {
         rules: [
             {
