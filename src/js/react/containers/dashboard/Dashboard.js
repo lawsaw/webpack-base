@@ -4,11 +4,10 @@ import { cloneDeep } from "lodash";
 
 export default class extends Component {
 
-    renderGrid = (type, blocks, content) => {
+    renderGrid = (type, content) => {
         return(
             <Grid
                 type={type}
-                blocks={blocks}
                 content={content}
                 renderGrid={this.renderGrid}
                 getDefaultSize={this.getDefaultSize}
@@ -98,7 +97,7 @@ export default class extends Component {
     }
 
     render() {
-        let grid = this.renderGrid('col', 1, [null]);
+        let grid = this.renderGrid('col', [null]);
         return(
             <div className="dashboard">
                 {grid}

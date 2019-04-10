@@ -44,14 +44,6 @@ export default class extends Component {
         }))
     }
 
-    // updateData = (blocks) => {
-    //     let dataContent = {};
-    //     for(let i = 0; i < blocks; i++) {
-    //         dataContent[i] = this.dataContent ? this.dataContent[i] ? this.dataContent[i] : null : null;
-    //     }
-    //     return dataContent;
-    // }
-
     onMouseDown = (e, index) => {
         const { mouseDirection } = this.state;
         this.resizeLimits.start =  e[mouseDirection];
@@ -109,17 +101,6 @@ export default class extends Component {
         }
     }
 
-    // createGrid = (index, type) => {
-    //     const { blocks } = this.state;
-    //     let newBlocks = blocks+1;
-    //     this.dataContent = this.updateData(newBlocks);
-    //     console.log(this.dataContent);
-    //     this.setState(() => ({
-    //         blocks: newBlocks,
-    //         dataSize: this.props.getDefaultSize(this.dataContent),
-    //     }));
-    // }
-
     createGrid = (position, type) => {
         console.log(position, type);
         if(this.dataContent.length <= 1) {
@@ -138,7 +119,7 @@ export default class extends Component {
                     dataSize: defaultSize
                 }))
             } else {
-                let grid = this.props.renderGrid(type, 1, [this.dataContent[position], 'NEW']);
+                let grid = this.props.renderGrid(type, [this.dataContent[position], 'NEW']);
                 this.dataContent[position] = grid;
                 this.refresh();
             }
