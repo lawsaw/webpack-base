@@ -4,11 +4,12 @@ import { cloneDeep } from "lodash";
 
 export default class extends Component {
 
-    renderGrid = (type, blocks) => {
+    renderGrid = (type, blocks, content) => {
         return(
             <Grid
                 type={type}
                 blocks={blocks}
+                content={content}
                 renderGrid={this.renderGrid}
                 getDefaultSize={this.getDefaultSize}
                 getStyle={this.getStyle}
@@ -18,31 +19,30 @@ export default class extends Component {
     }
 
     getDefaultSize = (dataContent) => {
-        let dataArr = Object.keys(dataContent);
         let defaultSize = {};
-        let size = 100 / dataArr.length;
-        dataArr.forEach((item, index) => {
+        let size = 100 / dataContent.length;
+        dataContent.forEach((item, index) => {
             defaultSize[index] = {
                 size,
                 space: size * index
             }
-        })
+        });
         return defaultSize;
     }
 
-    getStyle = (index, type, dataSize, currentDelta) => {
+    getStyle = (index, type, dataSize, current) => {
         let style = {item: {}, separator: {}};
-        let { index: activeIndex, delta: activeDelta } = currentDelta;
+        let { index: currentIndex, delta: currentDelta } = current;
         switch (type) {
             case 'col':
                 style.item.width = `${dataSize[index].size}%`;
                 style.item.left = `${dataSize[index].space}%`;
-                style.separator.left = `${dataSize[index].size + dataSize[index].space + (activeIndex === index ? activeDelta : 0)}%`;
+                style.separator.left = `${dataSize[index].size + dataSize[index].space + (currentIndex === index ? currentDelta : 0)}%`;
                 break;
             case 'row':
                 style.item.height = `${dataSize[index].size}%`;
                 style.item.top = `${dataSize[index].space}%`;
-                style.separator.top = `${dataSize[index].size + dataSize[index].space + (activeIndex === index ? activeDelta : 0)}%`;
+                style.separator.top = `${dataSize[index].size + dataSize[index].space + (currentIndex === index ? currentDelta : 0)}%`;
                 break;
             default:
                 style.item.left = `0%`;
@@ -62,43 +62,43 @@ export default class extends Component {
         let { width: widthRealNext, left:leftRealNext, height:heightRealNext, top:topRealNext } = itemRefNext.current.getBoundingClientRect();
         let distance = resizeLimits.finish - resizeLimits.start;
         let max,
-            unit,
+            value,
             delta,
-            value = Math.abs(distance),
-            realDelta = 0;
+            deltaAbsolute = Math.abs(distance),
+            deltaRelative = 0;
         if(distance < 0) {
             max = type == 'col' ? widthRealPrev : heightRealPrev;
-            value = max - value < limit.relative ? max - limit.relative : value;
-            delta = value * sizePrev / max;
+            deltaAbsolute = max - deltaAbsolute < limit.relative ? max - limit.relative : deltaAbsolute;
+            delta = deltaAbsolute * sizePrev / max;
             delta = delta > sizePrev-limit.absolute ? sizePrev-limit.absolute : delta;
-            unit = sizePrev - delta;
-            cloneDataSize[index].size = unit;
+            value = sizePrev - delta;
+            cloneDataSize[index].size = value;
             cloneDataSize[index+1].size = sizeNext + delta;
-            cloneDataSize[index+1].space = unit + spacePrev;
-            realDelta = -delta;
+            cloneDataSize[index+1].space = value + spacePrev;
+            deltaRelative = -delta;
         } else {
             max = type == 'col' ? widthRealNext : heightRealNext;
-            value = max - value < limit.relative ? max - limit.relative : value;
-            delta = value * sizeNext / max;
+            deltaAbsolute = max - deltaAbsolute < limit.relative ? max - limit.relative : deltaAbsolute;
+            delta = deltaAbsolute * sizeNext / max;
             delta = delta > sizeNext-limit.absolute ? sizeNext-limit.absolute : delta;
-            unit = sizePrev + delta;
-            cloneDataSize[index].size = unit;
+            value = sizePrev + delta;
+            cloneDataSize[index].size = value;
             cloneDataSize[index+1].space = spaceNext + delta;
             cloneDataSize[index+1].size = sizeNext - delta;
-            realDelta = delta;
+            deltaRelative = delta;
         }
         return {
             index,
             max,
+            deltaAbsolute,
+            deltaRelative,
             value,
-            unit,
-            delta: realDelta,
             dataSize: cloneDataSize
         }
     }
 
     render() {
-        let grid = this.renderGrid('col', 2);
+        let grid = this.renderGrid('col', 1, [null]);
         return(
             <div className="dashboard">
                 {grid}

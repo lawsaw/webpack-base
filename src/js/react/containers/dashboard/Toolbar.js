@@ -8,7 +8,7 @@ export default class extends Component {
             <div className="dashboardToolbar">
                 <div className="dashboardToolbar-item" onClick={() => this.props.createGrid(index, 'col')}>col</div>
                 <div className="dashboardToolbar-item" onClick={() => this.props.createGrid(index, 'row')}>row</div>
-                <div className="dashboardToolbar-item" onClick={() => this.props.destroyGrid(index)}>close</div>
+                <div className="dashboardToolbar-item" onClick={this.props.invertGrid}>invert</div>
             </div>
         )
     }

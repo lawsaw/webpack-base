@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import cx from 'classnames';
-import { Toolbar } from "./";
+import { Toolbar, Window } from "./";
 
 export default class extends Component {
 
@@ -8,7 +8,7 @@ export default class extends Component {
         const { style, refElem, index, children } = this.props;
         return(
             <div
-                className={cx(`dashboardGrid-item`)}
+                className={cx(`dashboardGridItem`)}
                 ref={refElem}
                 style={style}
             >
@@ -16,9 +16,11 @@ export default class extends Component {
                     <Toolbar
                         index={index}
                         createGrid={this.props.createGrid}
-                        destroyGrid={this.props.destroyGrid}
+                        invertGrid={this.props.invertGrid}
                     />
-                    {children}
+                    <Window>
+                        {children}
+                    </Window>
                 </React.Fragment>
             </div>
         )

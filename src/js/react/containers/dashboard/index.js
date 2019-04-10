@@ -3,7 +3,8 @@ import Grid from './Grid';
 import GridItem from './GridItem';
 import Separator from './Separator';
 import Toolbar from './Toolbar';
-// import Window from './Window';
+import Body from './Body';
+import Window from './Window';
 
 export {
     Dashboard,
@@ -11,5 +12,6 @@ export {
     Separator,
     GridItem,
     Toolbar,
-    // Window,
+    Body,
+    Window,
 }
