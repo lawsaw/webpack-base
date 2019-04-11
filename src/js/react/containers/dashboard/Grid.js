@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import cx from "classnames";
 import { cloneDeep, isEqual, isUndefined } from 'lodash';
-import { GridItem, Separator, Toolbar, Body } from "./";
+import { GridItem, Separator, ToolbarGrid, ToolbarItem, Body, Grid } from "./";
 
 export default class extends Component {
 
@@ -57,7 +57,7 @@ export default class extends Component {
     }
 
     onMouseUp = (e, index) => {
-        console.log('onMouseUp');
+        //console.log('onMouseUp');
         document.removeEventListener('mouseup', this.onMouseUpEvent, false);
         document.removeEventListener('mousemove', this.onMouseMoveEvent, false);
         this.dataResize();
@@ -82,7 +82,7 @@ export default class extends Component {
         );
         if(this.tempData.deltaAbsolute !== tempData.deltaAbsolute) {
             this.tempData = tempData;
-            console.log(this.tempData);
+            //console.log(this.tempData);
             this.setState(() => ({
                 current: {
                     index,
@@ -102,7 +102,8 @@ export default class extends Component {
     }
 
     createGrid = (position, type) => {
-        console.log(position, type);
+        //console.log(position, type);
+
         if(this.dataContent.length <= 1) {
             this.dataContent.splice(position+1, 0, null);
             let defaultSize = this.props.getDefaultSize(this.dataContent);
@@ -111,17 +112,30 @@ export default class extends Component {
                 mouseDirection: type === 'col' ? 'clientX' : 'clientY',
                 dataSize: defaultSize
             }))
+            console.log('111');
         } else {
             if(type === this.state.type) {
                 this.dataContent.splice(position+1, 0, null);
                 let defaultSize = this.props.getDefaultSize(this.dataContent);
                 this.setState(() => ({
                     dataSize: defaultSize
-                }))
+                }));
+                console.log('222');
             } else {
-                let grid = this.props.renderGrid(type, [this.dataContent[position], 'NEW']);
-                this.dataContent[position] = grid;
-                this.refresh();
+                if(this.dataContent[position] && this.dataContent[position].type === <Grid />.type) {
+                    console.log('stop');
+                    // this.dataContent.splice(position+1, 0, 'dfsdsfds');
+                    // let defaultSize = this.props.getDefaultSize(this.dataContent);
+                    // this.setState(() => ({
+                    //     dataSize: defaultSize
+                    // }));
+                } else {
+                    let grid = this.props.renderGrid(type, [this.dataContent[position], 'NEW']);
+                    this.dataContent[position] = grid;
+                    console.log('333');
+                    this.refresh();
+                }
+
             }
         }
 
@@ -138,6 +152,15 @@ export default class extends Component {
 
     }
 
+    deleteGrid = (index) => {
+        //console.log(`delete ${index}`);
+        this.dataContent.splice(index, 1);
+        let defaultSize = this.props.getDefaultSize(this.dataContent);
+        this.setState(() => ({
+            dataSize: defaultSize
+        }));
+    }
+
     invertGrid = () => {
         this.setState(() => ({
             type: this.state.type === 'col' ? 'row' : 'col',
@@ -150,26 +173,34 @@ export default class extends Component {
         const { dataSize, current, type } = this.state;
         //let dataContentArray = Object.keys(this.dataContent);
 
-        console.log(this.dataContent);
-        console.log(this.state.dataSize);
+        // console.log(this.dataContent);
+        console.log(this);
 
 
-        return (
+        return (this.dataContent.length > 1) && (
             <div
                 className={cx(
                     `dashboardGrid`,
                     `dashboardGrid--${type}`
                 )}
             >
-                <Toolbar
-                    createGrid={this.createGrid}
-                    invertGrid={this.invertGrid}
-                />
+                {
+                    this.dataContent.length > 1 && <ToolbarGrid
+                        invertGrid={this.invertGrid}
+                    />
+                }
                 <Body>
                     {
                         this.dataContent.map((item, index) => {
                             let { item: itemStyle, separator: separatorStyle } = this.props.getStyle(index, type, dataSize, current);
                             this.itemRef[index] = React.createRef();
+                            let childrenGridType = null;
+                            if(this.dataContent[index] && this.dataContent[index].type === <Grid />.type) {
+                                childrenGridType = this.dataContent[index].props.type;
+                            }  else {
+                                childrenGridType = null;
+                            }
+
                             return (
                                 <React.Fragment
                                     key={index}
@@ -181,6 +212,8 @@ export default class extends Component {
                                         refElem={this.itemRef[index]}
                                         createGrid={this.createGrid}
                                         invertGrid={this.invertGrid}
+                                        deleteGrid={this.deleteGrid}
+                                        childrenGridType={childrenGridType}
                                     />
                                     {
                                         !isUndefined(this.dataContent[index+1]) && <Separator

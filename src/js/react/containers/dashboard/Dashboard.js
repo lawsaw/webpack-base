@@ -97,7 +97,7 @@ export default class extends Component {
     }
 
     render() {
-        let grid = this.renderGrid('col', [null]);
+        let grid = this.renderGrid('col', ['first content', 55]);
         return(
             <div className="dashboard">
                 {grid}

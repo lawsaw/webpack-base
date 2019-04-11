@@ -2,7 +2,8 @@ import Dashboard from './Dashboard';
 import Grid from './Grid';
 import GridItem from './GridItem';
 import Separator from './Separator';
-import Toolbar from './Toolbar';
+import ToolbarGrid from './ToolbarGrid';
+import ToolbarItem from './ToolbarItem';
 import Body from './Body';
 import Window from './Window';
 
@@ -11,7 +12,8 @@ export {
     Grid,
     Separator,
     GridItem,
-    Toolbar,
+    ToolbarGrid,
+    ToolbarItem,
     Body,
     Window,
 }
