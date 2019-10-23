@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "watch": "webpack-dev-server --mode development --open",
-    "watchopen": "webpack-dev-server --port 3000 --hot --host 192.168.15.170"
+    "watchopen": "webpack-dev-server --port 3000 --hot --host 192.168.15.170",
+    "watch": "webpack-dev-server --port 3010 --hot"
   },
   "keywords": [],
   "author": "lawdre@gmail.com",

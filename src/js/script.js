@@ -14,6 +14,7 @@
 
 import { ready, loadImages, importAll } from './helpers/etc';
 import { Tooltip, ScrollTo, Tab, Scroolly, Svg, listenScroll } from './modules';
+import '@fortawesome/fontawesome-free/js/all.min';
 
 ready(loadImages);
 

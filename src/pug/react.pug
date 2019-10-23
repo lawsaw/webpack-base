@@ -1,4 +1,4 @@
-include ./config/options
+include ./config/constants
 
 doctype html
 html(lang="ru" prefix="og: http://ogp.me/ns#")
@@ -16,11 +16,11 @@ html(lang="ru" prefix="og: http://ogp.me/ns#")
         )
         link(
             rel='stylesheet',
-            href= 'css/style.css' + options.version
+            href= 'css/style.css' + VERSION
         )
     body
         #react-root
-        script(src= 'js/react.min.js' + options.version)
+        script(src= 'js/react.min.js' + VERSION)
 
 
 

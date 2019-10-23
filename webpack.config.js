@@ -14,8 +14,8 @@ const options = {
 
 const templates = [
     'index',
-    'test',
     'react',
+    'demo',
 ];
 
 let generateTemplates = () => {
@@ -45,7 +45,7 @@ module.exports = {
             './src/js/script.js',
             './src/scss/style.scss',
         ],
-        fontawesome: ['./src/js/fontawesome.js'],
+        //fontawesome: ['./src/js/fontawesome.js'],
         react: [
             './src/js/react/index.jsx',
         ]

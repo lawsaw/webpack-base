@@ -1,0 +1,12 @@
+mixin Svg(icon)
+    svg
+        use(xlink: href = icon)
+
+mixin Row(title)
+    -
+        var title = title || 'Title';
+    .row
+        .col-3= title
+        .col-9
+            if block
+                block

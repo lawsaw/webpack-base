@@ -28,9 +28,9 @@ $fonts : (
   $path: map-get(nth($fonts, $i+1), 'path');
   @each $name, $file in map-get(nth($fonts, $i+1), 'family') {
     @include font-face($name, $file, $path);
-    %css-family-#{$name},
-    .css-family-#{$name} {
-      font-family: #{$name} !important;
-    }
+    //%css-family-#{$name},
+    //.css-family-#{$name} {
+    //  font-family: #{$name} !important;
+    //}
   }
 }

@@ -1,5 +1,5 @@
 include ../config/functions
-include ../config/options
+include ../config/constants
 include ../modules/opengraph
 include ../modules/favicon
 
@@ -8,7 +8,7 @@ html(lang="ru" prefix="og: http://ogp.me/ns#")
     head
         block seo
         +favicon({
-            'image': options.images.path + "favicon.ico"
+            'image': PATH_IMG + "favicon.ico"
         })
         meta(
             charset='utf-8'
@@ -23,7 +23,7 @@ html(lang="ru" prefix="og: http://ogp.me/ns#")
         )
         link(
             rel='stylesheet',
-            href= 'css/style.css' + options.version
+            href= 'css/style.css' + VERSION
         )
     body
         block body

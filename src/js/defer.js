@@ -19,10 +19,10 @@ function loadScript(url, completeCallback) {
 loadScript('js/script.min.js',
     function(){
         console.log('script loaded');
-        loadScript('js/fontawesome.min.js',
-            function(){
-                console.log('fontawesome loaded');
-            }
-        );
+        // loadScript('js/fontawesome.min.js',
+        //     function(){
+        //         console.log('fontawesome loaded');
+        //     }
+        // );
     }
 );
